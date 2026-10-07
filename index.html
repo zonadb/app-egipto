@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Zona de Baño & Platinum App</title>
+  <style>
+    :root {
+      --orange-zb: #FF6600;
+      --orange-dark: #D45500;
+      --black-bg: #0F0F10;
+      --card-bg: #1C1C1E;
+      --text-main: #FFFFFF;
+      --text-muted: #A1A1A6;
+      --border-color: #2C2C2E;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #000000;
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+    }
+
+    .app-viewport {
+      width: 100%;
+      max-width: 430px;
+      height: 100vh;
+      background-color: var(--black-bg);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Cabecera superior */
+    .app-header {
+      background-color: var(--orange-zb);
+      padding: 14px 16px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    }
+    .app-header .brand h1 { margin: 0; font-size: 15px; font-weight: 800; text-transform: uppercase; }
+    .app-header .brand span { font-size: 10px; opacity: 0.9; display: block; }
+
+    /* Banner Contador */
+    .countdown-banner {
+      background: linear-gradient(180deg, #1C1C1E 0%, #121214 100%);
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 16px;
+      text-align: center;
+    }
+    .countdown-title { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
+    .timer-grid { display: flex; justify-content: center; gap: 12px; }
+    .timer-unit { text-align: center; }
+    .timer-val { font-size: 18px; font-weight: 800; color: var(--orange-zb); }
+    .timer-lbl { font-size: 9px; color: var(--text-muted); text-transform: uppercase; }
+
+    /* Área de Contenido */
+    .app-content { flex: 1; overflow-y: auto; padding: 14px; display: none; }
+    .app-content.active { display: block; }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .card h3 { margin-top: 0; font-size: 13.5px; color: var(--orange-zb); border-bottom: 1px solid var(--border-color); padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
+
+    /* Módulo del Tiempo */
+    .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+    .weather-box { background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; text-align: center; }
+    .weather-city { font-size: 11px; font-weight: bold; color: var(--orange-zb); text-transform: uppercase; }
+    .weather-temp { font-size: 15px; font-weight: 800; margin: 4px 0; }
+    .weather-desc { font-size: 10px; color: var(--text-muted); }
+
+    /* Chatbot Tab */
+    .chat-list { display: flex; flex-direction: column; gap: 8px; height: calc(100vh - 250px); overflow-y: auto; padding-bottom: 8px; }
+    .msg { max-width: 88%; padding: 10px 12px; border-radius: 12px; font-size: 12.5px; line-height: 1.45; }
+    .msg.bot { background: var(--card-bg); align-self: flex-start; border: 1px solid var(--border-color); }
+    .msg.user { background: var(--orange-zb); align-self: flex-end; font-weight: 500; }
+    
+    .chat-input-bar { display: flex; gap: 6px; padding: 8px 0; border-top: 1px solid var(--border-color); }
+    .chat-input-bar input { flex: 1; background: var(--card-bg); border: 1px solid var(--border-color); color: #fff; padding: 10px 12px; border-radius: 18px; font-size: 12px; outline: none; }
+    .chat-input-bar button { background: var(--orange-zb); border: none; color: #fff; padding: 10px 14px; border-radius: 18px; font-weight: bold; cursor: pointer; font-size: 12px; }
+
+    /* Checklist Tab */
+    .check-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border-color); font-size: 12px; line-height: 1.35; }
+    .check-item:last-child { border-bottom: none; }
+    .check-item input[type="checkbox"] { accent-color: var(--orange-zb); width: 16px; height: 16px; margin-top: 2px; }
+
+    /* Tablas de Datos */
+    table.data-table { width: 100%; border-collapse: collapse; font-size: 10.5px; margin-top: 6px; }
+    table.data-table th, table.data-table td { border: 1px solid var(--border-color); padding: 5px 6px; text-align: left; }
+    table.data-table th { background-color: rgba(255,102,0,0.15); color: var(--orange-zb); font-weight: bold; }
+
+    /* Menú inferior de navegación */
+    .tab-bar {
+      height: 60px;
+      background-color: var(--card-bg);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+    .tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      color: var(--text-muted);
+      font-size: 9.5px;
+      cursor: pointer;
+      width: 20%;
+    }
+    .tab-item.active { color: var(--orange-zb); font-weight: bold; }
+    .tab-item .icon { font-size: 18px; }
+    .badge-pts { background: var(--orange-zb); color: #fff; font-size: 9.5px; padding: 2px 6px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+
+<div class="app-viewport">
+  <!-- Cabecera -->
+  <div class="app-header">
+    <div class="brand">
+      <h1>Zona de Baño</h1>
+      <span>Programa Platinum • Egipto 2026</span>
+    </div>
+    <span style="font-size: 9.5px; background: rgba(0,0,0,0.3); padding: 4px 7px; border-radius: 10px;">Juntos somos más fuertes</span>
+  </div>
+
+  <!-- Banner Contador a Egipto -->
+  <div class="countdown-banner">
+    <div class="countdown-title">⏳ Salida Oficial a Egipto (09 Octubre 2026)</div>
+    <div class="timer-grid">
+      <div class="timer-unit"><div class="timer-val" id="d-days">00</div><div class="timer-lbl">Días</div></div>
+      <div class="timer-unit"><div class="timer-val" id="d-hours">00</div><div class="timer-lbl">Horas</div></div>
+      <div class="timer-unit"><div class="timer-val" id="d-mins">00</div><div class="timer-lbl">Min</div></div>
+      <div class="timer-unit"><div class="timer-val" id="d-secs">00</div><div class="timer-lbl">Seg</div></div>
+    </div>
+  </div>
+
+  <!-- PESTAÑA 1: CHATBOT ASISTENTE -->
+  <div class="app-content active" id="tab-chat">
+    <div class="chat-list" id="chatList">
+      <div class="msg bot">
+        👋 ¡Hola! Soy el <b>Asistente Virtual Zona de Baño</b>.<br><br>
+        Resuelvo cualquier duda sobre las normas de la cooperativa, puntos ZB, vuelos, itinerario de Egipto, clima o seguro de viaje.
+      </div>
+    </div>
+    <div class="chat-input-bar">
+      <input type="text" id="chatInput" placeholder="Escribe tu consulta..." onkeypress="if(event.key==='Enter') sendAppMsg()">
+      <button onclick="sendAppMsg()">Enviar</button>
+    </div>
+  </div>
+
+  <!-- PESTAÑA 2: TABLA DE PUNTOS PLATINUM COMPLETA -->
+  <div class="app-content" id="tab-puntos">
+    <div class="card">
+      <h3>📊 Norma del Consejo Rector <span class="badge-pts">Mínimo 240 Pts</span></h3>
+      <p style="font-size: 11px; line-height: 1.4;">
+        • <b>Periodo de obtención:</b> 01/01/2026 al 31/12/2026[cite: 7].<br>
+        • <b>Garantía de cumplimiento:</b> Si en octubre realizas el viaje y a 31/12 no alcanzas el mínimo de 240 puntos, la cooperativa facturará el valor de la/s plaza/s disfrutadas[cite: 7].<br>
+        • <b>Máximo alcanzable:</b> 533 puntos[cite: 7].
+      </p>
+    </div>
+    <div class="card">
+      <h3>🏷️ Catálogo Oficial de Puntos por Proveedor</h3>
+      <table class="data-table">
+        <thead>
+          <tr><th>Proveedor ZB</th><th>Producto ZB Aquanatur / Acción</th><th>Pts</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>AQA Chemicals</td><td>Producto Químico (+1000€) / Saunas ZB / Spas ZB</td><td>12 / 35 / 35</td></tr>
+          <tr><td>Baeza</td><td>Limpieza (+500€) / Iluminación (+500€) / Filtro Timanfaya</td><td>5 / 5 / 15</td></tr>
+          <tr><td>BS Pool / Light / Dosim.</td><td>Cloradores Salinos / Cuadros Eléctricos / Dosificador Poolux</td><td>15 / 5 / 5</td></tr>
+          <tr><td>Fluidra</td><td>Cloradores Salinos / Filtro Etna / Bomba VIC / Robot B-Free</td><td>10 / 15 / 4 / 12</td></tr>
+          <tr><td>GCLP</td><td>Cuadros Eléctricos WiFi ZB</td><td>3</td></tr>
+          <tr><td>Iber / Insol / Follet</td><td>Cubiertas Lamas (+400€) / Descalcificadores / Ósmosis (+300€)</td><td>35 / 6 / 3</td></tr>
+          <tr><td>Poolstar</td><td>Bomba de Calor ZB / Saunas Utopía y Canopée ZB</td><td>15 / 10</td></tr>
+          <tr><td>Pocthan</td><td>Pooltiger, Spatiger o Growtiger ZB</td><td>5</td></tr>
+          <tr><td>Productos QP</td><td>Químico (+1500€) / Vidrio Filtrante / Mangueras / Robots Ibot</td><td>15 / 10 / 5 / 30</td></tr>
+          <tr><td>PSH</td><td>Cloradores Salinos ZB / Bomba VS / Bomba Mini/Micro/ND.2</td><td>15 / 10 / 5</td></tr>
+          <tr><td>Speck X española</td><td>Bomba LUX ZB</td><td>10</td></tr>
+          <tr><td>PS Group</td><td>Cubiertas Lamas ZB</td><td>35</td></tr>
+          <tr><td>SCP</td><td>Lámina Arkorplan (+1800€) / Lámina Proflex (+1800€) / Robots Maytronics</td><td>18 / 18 / 15</td></tr>
+          <tr><td>Diversificación Proveedores</td><td>De 10 a 20 Prov. (6 pts) | De 21 a 30 Prov. (12 pts) | +30 Prov. (18 pts)</td><td>6 a 18</td></tr>
+          <tr><td>Eventos & Gestión</td><td>Asistencia a Feria EXPOOL (+20 pts) | Responder en plazo a Oficina (+20 pts)</td><td>20 + 20</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PESTAÑA 3: CHECKLIST COMPLETA -->
+  <div class="app-content" id="tab-checklist">
+    <div class="card">
+      <h3>🛂 Documentación & Dinero</h3>
+      <div class="check-item"><input type="checkbox"> Pasaporte original (vigente mínimo 6 meses tras el viaje)</div>
+      <div class="check-item"><input type="checkbox"> Visado (30€) y Propinas generales (75€) — Incluidos en el programa</div>
+      <div class="check-item"><input type="checkbox"> Billetes de avión (Bono chárter) y copia digital en el móvil</div>
+      <div class="check-item"><input type="checkbox"> Tarjeta bancaria habitual + Efectivo en Libras Egipcias (EGP) para compras pequeñas</div>
+    </div>
+    <div class="card">
+      <h3>📱 Electrónica & Normas de Equipaje</h3>
+      <div class="check-item"><input type="checkbox"> <b>Powerbanks:</b> OBLIGATORIO en equipaje de mano (Prohibido en bodega)</div>
+      <div class="check-item"><input type="checkbox"> 🚫 <b>Drones:</b> ESTRICTAMENTE PROHIBIDOS por la ley militar de Egipto</div>
+      <div class="check-item"><input type="checkbox"> Equipaje: 1 maleta facturada (máx. 20 kg) + 1 bulto de mano (8 kg)</div>
+      <div class="check-item"><input type="checkbox"> Cargador de móvil, baterías adicionales y cable USB</div>
+    </div>
+    <div class="card">
+      <h3>🕌 Ropa, Salud & Pautas en Destino</h3>
+      <div class="check-item"><input type="checkbox"> Ropa ligera de algodón/lino + Pañuelo/chal para cubrise en mezquitas</div>
+      <div class="check-item"><input type="checkbox"> Calzado cerrado y cómodo para caminar por arena y templos</div>
+      <div class="check-item"><input type="checkbox"> Botiquín: Fortasec, suero, analgésicos, crema solar SPF50 y repelente</div>
+      <div class="check-item"><input type="checkbox"> Consumo exclusivo de AGUA EMBOTELLADA precintada (evitar hielo/crudos)</div>
+      <div class="check-item"><input type="checkbox"> Seguridad: Si un agente pide pasaporte o dinero, llamar de inmediato al guía local</div>
+    </div>
+  </div>
+
+  <!-- PESTAÑA 4: ITINERARIO & TIEMPO -->
+  <div class="app-content" id="tab-itinerary">
+    <div class="card">
+      <h3>☀️ Previsión Climatológica (Octubre)</h3>
+      <div class="weather-grid">
+        <div class="weather-box">
+          <div class="weather-city">Aswan / Luxor</div>
+          <div class="weather-temp">35°C / 21°C</div>
+          <div class="weather-desc">☀️ Sol radiante & ambiente seco</div>
+        </div>
+        <div class="weather-box">
+          <div class="weather-city">El Cairo</div>
+          <div class="weather-temp">29°C / 19°C</div>
+          <div class="weather-desc">🌤️ Suave y despejado</div>
+        </div>
+      </div>
+      <p style="font-size: 10.5px; color: var(--text-muted); margin-top: 8px; text-align: center;">
+        💡 <i>Octubre es idóneo para recorrer Egipto. Llevar ropa muy fresca de día y chaqueta fina para los interiores con aire acondicionado.</i>
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>✈️ Vuelos Chárter Directos (09 - 16 Oct)</h3>
+      <p style="font-size: 11px; line-height: 1.5;">
+        <b>Salida Madrid (Air Cairo MSC3030):</b> 09-Oct 13:30h MAD → 19:35h ASW.<br>
+        <b>Salida Barcelona (Nile Air NIA6532):</b> 09-Oct 13:35h BCN → 19:20h ASW.<br>
+        <b>Regreso (16-Oct):</b> Salida El Cairo 08:30h (MAD, T1) / 09:00h (BCN, T2B).
+      </p>
+    </div>
+    <div class="card">
+      <h3>🚢 Crucero Nilo (3 Noches)</h3>
+      <p style="font-size: 11px;">Motonave <b>M/S El Jamila (5★ B Plus)</b> en Pensión Completa. Visitas: Templo de Philae, Kom Ombo, Edfu, Templo de Karnak, Templo de Luxor, Valle de los Reyes y Colosos de Memnón.</p>
+    </div>
+    <div class="card">
+      <h3>🏛️ El Cairo & Alejandría (4 Noches)</h3>
+      <p style="font-size: 11px;"><b>Hotel Gewan (5★)</b>. Necrópolis de Guiza con entrada al interior de la 2ª o 3ª pirámide, Esfinge, Gran Museo Egipcio (GEM), Noche Cairota en Khan El Khalili (cena, té y shisha) y excursión a Alejandría.</p>
+    </div>
+  </div>
+
+  <!-- PESTAÑA 5: SEGURO DE VIAJE (GRUPOS TOP) -->
+  <div class="app-content" id="tab-seguro">
+    <div class="card">
+      <h3>🛡️ Póliza de Grupo Top Integrada</h3>
+      <p style="font-size: 11px; line-height: 1.4;">
+        Todos los participantes clasificados cuentan con seguro médico, de equipaje y anulación de viaje contratado para la expedición.
+      </p>
+    </div>
+    <div class="card">
+      <h3>📋 Desglose de Coberturas Técnicas</h3>
+      <table class="data-table">
+        <thead>
+          <tr><th>Garantía Aprobada</th><th>Límite de Cobertura</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Gastos Médicos en el Mundo (Enfermedad o Accidente)</td><td><b>20.000 €</b> (Incluye urgencia por enfermedades preexistentes)</td></tr>
+          <tr><td>Asistencia Médica Digital (Doctor for Travel 24/365)</td><td>Videollamada médica e incidencias por WhatsApp</td></tr>
+          <tr><td>Gastos de Anulación del Viaje</td><td>Hasta <b>1.200 €</b> (Cubre 45 causas justificadas)</td></tr>
+          <tr><td>Pérdida, Daños o Robo de Equipaje Facturado</td><td>Hasta <b>600 €</b> (100 € adicionales por demora)</td></tr>
+          <tr><td>Responsabilidad Civil Privada</td><td><b>60.000 €</b></td></tr>
+          <tr><td>Prolongación de Estancia en Hotel por Enfermedad</td><td>60 € / día (máx. 10 días)</td></tr>
+          <tr><td>Repatriación Sanitaria o Restos Mortales</td><td>Ilimitado</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Barra de pestañas inferior -->
+  <div class="tab-bar">
+    <div class="tab-item active" onclick="switchTab('tab-chat', this)">
+      <span class="icon">💬</span>
+      <span>Asistente</span>
+    </div>
+    <div class="tab-item" onclick="switchTab('tab-puntos', this)">
+      <span class="icon">📊</span>
+      <span>Puntos ZB</span>
+    </div>
+    <div class="tab-item" onclick="switchTab('tab-checklist', this)">
+      <span class="icon">🧳</span>
+      <span>Checklist</span>
+    </div>
+    <div class="tab-item" onclick="switchTab('tab-itinerary', this)">
+      <span class="icon">✈️</span>
+      <span>Egipto</span>
+    </div>
+    <div class="tab-item" onclick="switchTab('tab-seguro', this)">
+      <span class="icon">🛡️</span>
+      <span>Seguro</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Temporizador de Cuenta Atrás corregido
+  function startCountdown() {
+    const targetDate = new Date('2026-10-09T13:30:00').getTime();
+    
+    function updateTimer() {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance < 0) {
+        document.querySelector('.countdown-banner').innerHTML = "<b>¡El viaje a Egipto está en marcha! 🇪🇬✨</b>";
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      document.getElementById('d-days').innerText = days < 10 ? '0' + days : days;
+      document.getElementById('d-hours').innerText = hours < 10 ? '0' + hours : hours;
+      document.getElementById('d-mins').innerText = minutes < 10 ? '0' + minutes : minutes;
+      document.getElementById('d-secs').innerText = seconds < 10 ? '0' + seconds : seconds;
+    }
+
+    updateTimer();
+    setInterval(updateTimer, 1000);
+  }
+
+  // Inicializar al cargar
+  window.onload = function() {
+    startCountdown();
+  };
+
+  // Cambio de Pestañas
+  function switchTab(tabId, element) {
+    document.querySelectorAll('.app-content').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    element.classList.add('active');
+  }
+
+  // Lógica de Mensajería del Chatbot
+  function sendAppMsg() {
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    const chatList = document.getElementById('chatList');
+    
+    const userDiv = document.createElement('div');
+    userDiv.className = 'msg user';
+    userDiv.innerText = text;
+    chatList.appendChild(userDiv);
+
+    input.value = '';
+
+    setTimeout(() => {
+      const botDiv = document.createElement('div');
+      botDiv.className = 'msg bot';
+      const q = text.toLowerCase();
+
+      if (q.includes('tiempo') || q.includes('clima') || q.includes('calor') || q.includes('temperatura')) {
+        botDiv.innerHTML = "☀️ <b>Previsión del tiempo en Egipto (Octubre):</b><br>• <b>Aswan/Luxor:</b> 35°C de día y 21°C de noche (clima seco)[cite: 1].<br>• <b>El Cairo:</b> 29°C de día y 19°C de noche[cite: 1].<br><i>Llevar ropa ligera fresca y una sudadera fina para los interiores con aire acondicionado.</i>";
+      } else if (q.includes('vuelo') || q.includes('madrid') || q.includes('barcelona')) {
+        botDiv.innerHTML = "✈️ <b>Vuelos de Ida (09 Oct 2026):</b><br>• <b>Madrid:</b> Air Cairo MSC3030 (13:30h -> 19:35h Aswan)[cite: 1].<br>• <b>Barcelona:</b> Nile Air NIA6532 (13:35h -> 19:20h Aswan)[cite: 1].";
+      } else if (q.includes('puntos') || q.includes('240')) {
+        botDiv.innerHTML = "📊 <b>Puntos ZB Aquanatur:</b> Es obligatorio alcanzar un mínimo de <b>240 puntos</b> durante 2026[cite: 7]. Si en octubre realizas el viaje y a 31/12 no alcanzas el mínimo, la cooperativa facturará la plaza[cite: 7]. ¡Sumas 20 pts por asistir a EXPOOL[cite: 7]!";
+      } else if (q.includes('seguro') || q.includes('medico') || q.includes('anulacion')) {
+        botDiv.innerHTML = "🛡️ <b>Seguro Grupos Top:</b> Incluye 20.000 € en gastos médicos[cite: 3], atención por videollamada <i>Doctor for Travel 24/365</i> y WhatsApp[cite: 4], y 1.200 € de anulación por 45 causas justificadas[cite: 3, 5, 6].";
+      } else if (q.includes('dron') || q.includes('powerbank') || q.includes('agua')) {
+        botDiv.innerHTML = "⚠️ <b>Reglas de Seguridad:</b> Drones PROHIBIDOS por ley militar[cite: 1, 2]. Powerbanks OBLIGATORIAS en equipaje de mano[cite: 1, 2]. Bebida: Beber solo agua embotellada precintada[cite: 1, 2].";
+      } else {
+        botDiv.innerHTML = "Para resolver cualquier consulta, recuerda el lema de la cooperativa: <i>'Juntos somos más fuertes'</i>[cite: 1, 8]. Puedes consultar las pestañas inferiores de Puntos ZB, Checklist, Egipto y Seguro.";
+      }
+
+      chatList.appendChild(botDiv);
+      chatList.scrollTop = chatList.scrollHeight;
+    }, 350);
+  }
+</script>
+
+</body>
+</html>
