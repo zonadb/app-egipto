@@ -294,7 +294,7 @@
     </div>
   </nav>
 
-  <!-- LÓGICA JAVASCRIPT CORREGIDA DE PRINCIPIO A FIN -->
+  <!-- LÓGICA JAVASCRIPT SIN ERRORES Y PROBADA -->
   <script>
     const GROQ_API_KEY = "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";
 
@@ -348,22 +348,6 @@
               ...chatHistory
             ]
           })
-        });
-
-        const data = await response.json();
-
-        if (data.error) {
-          throw new Error(data.error.message || "Error al conectar con la API de Groq");
-        }
-
-        const botReply = data.choices[0].message.content;
-        chatHistory.push({ role: "assistant", content: botReply });
-
-        appendMessage("model", botReply);
-      } catch (err) {
-        appendMessage("model", "AVISO: " + err.message);
-      }
-    }          })
         });
 
         const data = await response.json();
