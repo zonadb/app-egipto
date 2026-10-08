@@ -304,7 +304,7 @@
   // ==========================================
   // PEGA TU CLAVE DE API DE GOOGLE AI STUDIO AQUÍ:
   // ==========================================
-  const GEMINI_API_KEY = "AQ.Ab8RN6JGgfA-lJsv-YlTwZSTK1HHyVRKN1Ia-VcgGmlgqyRQzA";
+  const GEMINI_API_KEY = "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";
 
   // INTEGRACIÓN COMPLETA DE TU BASE DE CONOCIMIENTO JSON EN LA IA
   const SYSTEM_INSTRUCTION = `
@@ -437,24 +437,30 @@ UTILIZA ESTA BASE DE CONOCIMIENTO OFICIAL PARA RESPONDER A CUALQUIER CONSULTA:
         throw new Error("Pega tu clave API de Gemini en la línea 282 del código.");
       }
 
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+  headers: {
+    'Authorization': `Bearer ${GEMINI_API_KEY}`,
+    'Content-Type': 'application/json'
+  },
         body: JSON.stringify({
-          system_instruction: {
-            parts: [{ text: SYSTEM_INSTRUCTION }]
-          },
-          contents: chatHistory
-        })
-      });
-
+    model: "google/gemini-2.0-flash-001",
+    messages: [
+      { role: "system", content: SYSTEM_INSTRUCTION },
+      ...chatHistory.map(m => ({
+        role: m.role === "model" ? "assistant" : "user",
+        content: m.parts[0].text
+      }))
+    ]
+  })
+});
       const data = await response.json();
 
       if (data.error) {
         throw new Error(data.error.message || "Error al conectar con Gemini");
       }
 
-      const botReply = data.candidates[0].content.parts[0].text;
+      const botReply = data.choices[0].message.content;
       chatHistory.push({ role: "model", parts: [{ text: botReply }] });
 
       const formattedReply = botReply
