@@ -342,12 +342,28 @@
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            model: "llama-3.1-8b-instant",
+            model: "llama3-8b-8192",
             messages: [
               { role: "system", content: SYSTEM_INSTRUCTION },
               ...chatHistory
             ]
           })
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+          throw new Error(data.error.message || "Error al conectar con la API de Groq");
+        }
+
+        const botReply = data.choices[0].message.content;
+        chatHistory.push({ role: "assistant", content: botReply });
+
+        appendMessage("model", botReply);
+      } catch (err) {
+        appendMessage("model", "AVISO: " + err.message);
+      }
+    }          })
         });
 
         const data = await response.json();
