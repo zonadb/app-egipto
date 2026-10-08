@@ -11,10 +11,9 @@
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
-    .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
   </style>
 </head>
-<body class="bg-slate-100 text-slate-800 antialiased selection:bg-amber-500 selection:text-white pb-20 md:pb-0">
+<body class="bg-slate-100 text-slate-800 antialiased pb-20 md:pb-0">
 
   <!-- HEADER -->
   <header class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white shadow-lg sticky top-0 z-50">
@@ -38,7 +37,6 @@
     <!-- TAB 1: ASISTENTE IA -->
     <section id="tab-chat" class="tab-content active space-y-4">
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-[75vh]">
-        <!-- Top bar del chat -->
         <div class="bg-slate-900 text-white px-4 py-3 flex items-center justify-between border-b border-slate-800">
           <div class="flex items-center gap-3">
             <div class="relative">
@@ -57,7 +55,6 @@
           </button>
         </div>
 
-        <!-- Área de mensajes -->
         <div id="chat-box" class="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-50 text-sm">
           <div class="flex gap-2 max-w-[85%]">
             <div class="w-7 h-7 rounded-full bg-amber-500 flex-shrink-0 flex items-center justify-center text-slate-900 text-xs font-bold mt-1">ZB</div>
@@ -67,7 +64,6 @@
           </div>
         </div>
 
-        <!-- Input del chat -->
         <div class="p-3 bg-white border-t border-slate-200 flex gap-2">
           <input type="text" id="chat-input" onkeypress="handleKeyPress(event)" placeholder="Escribe tu consulta aquí..." class="flex-1 bg-slate-100 border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-amber-500 focus:bg-white transition-all">
           <button onclick="sendAppMsg()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-4 py-2.5 rounded-xl shadow-md transition-all active:scale-95">
@@ -88,7 +84,6 @@
         <i class="fa-solid fa-pyramid absolute -right-4 -bottom-6 text-9xl text-amber-500/20"></i>
       </div>
 
-      <!-- Cuenta atrás -->
       <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
         <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Cuenta Atrás para el Despegue</h3>
         <div class="grid grid-cols-4 gap-2 text-center" id="countdown">
@@ -99,7 +94,6 @@
         </div>
       </div>
 
-      <!-- Detalle por días -->
       <div class="space-y-3">
         <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-1">
           <span class="text-xs font-bold text-amber-600">Día 1 · Sábado 24 Octubre</span>
@@ -129,40 +123,52 @@
       </div>
     </section>
 
-    <!-- TAB 3: PROGRAMA PLATINUM -->
-    <section id="tab-platinum" class="tab-content space-y-4">
-      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-        <h3 class="font-bold text-slate-900 text-lg">Reglas de Puntuación Platinum</h3>
-        <p class="text-xs text-slate-600 leading-relaxed">
-          El Programa Platinum incentiva las compras a proveedores oficiales de Zona de Baño. Consigue tu plaza para Egipto alcanzando las metas establecidas.
-        </p>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
-          <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl space-y-1">
-            <span class="text-xs font-bold text-amber-800 uppercase">Requisito 1ª Plaza</span>
-            <div class="text-xl font-black text-amber-900">60.000 € + 240 Pts ZB</div>
-            <p class="text-[11px] text-amber-700">Mínimo en compras netas a proveedores oficiales dentro del año natural.</p>
+    <!-- TAB 3: CHECKLIST EQUIPAJE -->
+    <section id="tab-checklist" class="tab-content space-y-4">
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="font-bold text-slate-900 text-lg">Lista de Equipaje</h3>
+            <p class="text-xs text-slate-500">Marca los objetos a medida que los guardes en la maleta.</p>
           </div>
-
-          <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl space-y-1">
-            <span class="text-xs font-bold text-emerald-800 uppercase">Requisito 2ª Plaza Gratis</span>
-            <div class="text-xl font-black text-emerald-900">200.000 € Netos</div>
-            <p class="text-[11px] text-emerald-700">Supera este umbral de compras para obtener una segunda plaza sin coste adicional.</p>
-          </div>
+          <span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded-lg">Imprescindibles</span>
         </div>
-      </div>
 
-      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
-        <h4 class="font-bold text-slate-800 text-sm">Puntos Extra Aquanatur</h4>
-        <p class="text-xs text-slate-600">
-          Las compras de productos de nuestra marca propia <b>Aquanatur</b> otorgan bonificación especial en la puntuación ZB. Máximo de puntos acumulables por periodo: <b>533 pts</b>.
-        </p>
+        <div class="space-y-2 text-sm">
+          <label class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors">
+            <input type="checkbox" class="w-5 h-5 accent-amber-500 rounded border-slate-300">
+            <span class="font-medium text-slate-700">Pasaporte original (vigencia mín. 6 meses)</span>
+          </label>
+          <label class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors">
+            <input type="checkbox" class="w-5 h-5 accent-amber-500 rounded border-slate-300">
+            <span class="font-medium text-slate-700">Toallitas húmedas y gel desinfectante</span>
+          </label>
+          <label class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors">
+            <input type="checkbox" class="w-5 h-5 accent-amber-500 rounded border-slate-300">
+            <span class="font-medium text-slate-700">Protector solar y gafas de sol</span>
+          </label>
+          <label class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors">
+            <input type="checkbox" class="w-5 h-5 accent-amber-500 rounded border-slate-300">
+            <span class="font-medium text-slate-700">Cargador de móvil y batería externa (Powerbank)</span>
+          </label>
+          <label class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors">
+            <input type="checkbox" class="w-5 h-5 accent-amber-500 rounded border-slate-300">
+            <span class="font-medium text-slate-700">Repelente de insectos</span>
+          </label>
+          <label class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors">
+            <input type="checkbox" class="w-5 h-5 accent-amber-500 rounded border-slate-300">
+            <span class="font-medium text-slate-700">Calzado cómodo e higiénico para caminar</span>
+          </label>
+          <label class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors">
+            <input type="checkbox" class="w-5 h-5 accent-amber-500 rounded border-slate-300">
+            <span class="font-medium text-slate-700">Euros en efectivo (para cambio/propinas)</span>
+          </label>
+        </div>
       </div>
     </section>
 
     <!-- TAB 4: HERRAMIENTAS -->
     <section id="tab-tools" class="tab-content space-y-4">
-      <!-- Conversor de divisas -->
       <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
         <div class="flex items-center gap-2">
           <i class="fa-solid fa-calculator text-amber-500 text-lg"></i>
@@ -182,7 +188,6 @@
         <p class="text-[11px] text-slate-400">Tipo de cambio estimado de referencia: 1 EUR ≈ 52,00 EGP.</p>
       </div>
 
-      <!-- Guía rápida de viaje -->
       <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
         <h3 class="font-bold text-slate-900 text-base">Recomendaciones Clave para Egipto</h3>
         <ul class="text-xs text-slate-600 space-y-2 list-disc pl-4">
@@ -207,9 +212,9 @@
         <i class="fa-solid fa-compass text-lg block"></i>
         <span class="text-[10px]">Itinerario</span>
       </button>
-      <button onclick="switchTab('platinum')" id="nav-platinum" class="py-2.5 text-slate-400 font-medium hover:text-slate-600">
-        <i class="fa-solid fa-award text-lg block"></i>
-        <span class="text-[10px]">Platinum</span>
+      <button onclick="switchTab('checklist')" id="nav-checklist" class="py-2.5 text-slate-400 font-medium hover:text-slate-600">
+        <i class="fa-solid fa-list-check text-lg block"></i>
+        <span class="text-[10px]">Equipaje</span>
       </button>
       <button onclick="switchTab('tools')" id="nav-tools" class="py-2.5 text-slate-400 font-medium hover:text-slate-600">
         <i class="fa-solid fa-toolbox text-lg block"></i>
@@ -218,45 +223,18 @@
     </div>
   </nav>
 
-  <!-- LÓGICA Y SCRIPTS -->
+  <!-- SCRIPTS -->
   <script>
-    // ==========================================
-    // CONFIGURACIÓN DE LA API KEY & KNOWLEDGE BASE
-    // ==========================================
     const GEMINI_API_KEY = "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";
 
     const SYSTEM_INSTRUCTION = `
     Eres el Asistente Virtual Oficial del Grupo Zona de Baño, Soc. COOP. para el "Programa Platinum" y el Viaje Oficial a Egipto 2026.
     Tu objetivo es resolver dudas de socios y participantes de forma muy precisa, cercana, profesional, clara y corporativa.
     Muestra siempre el lema corporativo: "Juntos somos más fuertes" cuando hables de convivencia, hermandad o valores del grupo.
-
-    UTILIZA ESTA BASE DE CONOCIMIENTO OFICIAL PARA RESPONDER A CUALQUIER CONSULTA:
-
-    1. GRUPO ZONA DE BAÑO & ASOCIADOS:
-       - Naturaleza: Cooperativa de servicios de ámbito nacional para profesionales de piscinas, jardines, spas y tratamiento de agua. Fundada en 2006 en Santa Oliva (Tarragona).
-       - Servicios: Centralización de compras, marca propia ZB Aquanatur, red ZTV en escaparates y Feria Expool en Amposta (Tarragona).
-       - Socio de pleno derecho: 105€/mes. Exclusividad 30 km. Mínimo 60.000€/año netos en compras (penalización 3,5% si no se alcanza). Derecho a voto y programa Platinum.
-       - Asociado: 75€/mes. Rappel 1% general + 2% en marca Aquanatur.
-       - Punto de Venta ZB: 0€/mes. Tarifas de grupo.
-
-    2. PROGRAMA PLATINUM & PUNTOS ZB:
-       - Requisitos viaje: 60.000€ netos en compras anuales a proveedores oficiales y alcanzar un mínimo de 240 puntos ZB Aquanatur (de un máximo de 533 pts) entre 01/01 y 31/12.
-       - 2ª plaza gratis: Superando 200.000€ netos anuales.
-
-    3. VIAJE OFICIAL A EGIPTO 2026:
-       - Fechas: Del 24 de Octubre al 1 de Noviembre de 2026 (9 días / 8 noches).
-       - Vuelos: Vuelos regulares desde Madrid y Barcelona a El Cairo.
-       - Alojamiento: Hotel 5 estrellas en El Cairo y Crucero 5 estrellas Gran Lujo por el Nilo (Asuán a Luxor).
-       - Visitas incluidas: Pirámides de Guiza, Esfinge, Museo Egipcio, Ciudadela de Saladino, Khan El Khalili, Templos de File, Kom Ombo, Edfu, Karnak, Luxor, Valle de los Reyes, Colosos de Memnón y Templo de Hatshepsut.
-       - Excursión opcional: Abu Simbel en autobús desde Asuán.
-       - Visado y Seguros: Visado incluido y tramitado a la llegada. Seguro de viaje y asistencia médica Mapfre.
     `;
 
     let chatHistory = [];
 
-    // ==========================================
-    // FUNCIÓN DE ENVÍO DE MENSAJES (OPENROUTER)
-    // ==========================================
     async function sendAppMsg() {
       const inputEl = document.getElementById("chat-input");
       const text = inputEl.value.trim();
@@ -291,7 +269,7 @@
         const data = await response.json();
 
         if (data.error) {
-          throw new Error(data.error.message || "Error al conectar con el servidor de la IA");
+          throw new Error(data.error.message || "Error al conectar con la IA");
         }
 
         const botReply = data.choices[0].message.content;
@@ -309,17 +287,11 @@
       msgDiv.className = role === "user" ? "flex justify-end mb-3" : "flex gap-2 max-w-[85%] mb-3";
 
       if (role === "user") {
-        msgDiv.innerHTML = `
-          <div class="bg-amber-500 text-slate-900 font-medium p-3 rounded-2xl rounded-tr-none shadow-sm text-sm">
-            ${escapeHtml(messageText)}
-          </div>
-        `;
+        msgDiv.innerHTML = `<div class="bg-amber-500 text-slate-900 font-medium p-3 rounded-2xl rounded-tr-none shadow-sm text-sm">${escapeHtml(messageText)}</div>`;
       } else {
         msgDiv.innerHTML = `
           <div class="w-7 h-7 rounded-full bg-amber-500 flex-shrink-0 flex items-center justify-center text-slate-900 text-xs font-bold mt-1">ZB</div>
-          <div class="bg-white p-3 rounded-2xl rounded-tl-none border border-slate-200 text-slate-700 shadow-sm leading-relaxed text-sm">
-            ${formatMarkdown(messageText)}
-          </div>
+          <div class="bg-white p-3 rounded-2xl rounded-tl-none border border-slate-200 text-slate-700 shadow-sm leading-relaxed text-sm">${formatMarkdown(messageText)}</div>
         `;
       }
 
@@ -327,42 +299,25 @@
       chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    function handleKeyPress(e) {
-      if (e.key === 'Enter') sendAppMsg();
-    }
+    function handleKeyPress(e) { if (e.key === 'Enter') sendAppMsg(); }
 
     function clearChat() {
       chatHistory = [];
-      const chatBox = document.getElementById("chat-box");
-      chatBox.innerHTML = `
+      document.getElementById("chat-box").innerHTML = `
         <div class="flex gap-2 max-w-[85%]">
           <div class="w-7 h-7 rounded-full bg-amber-500 flex-shrink-0 flex items-center justify-center text-slate-900 text-xs font-bold mt-1">ZB</div>
-          <div class="bg-white p-3 rounded-2xl rounded-tl-none border border-slate-200 text-slate-700 shadow-sm">
-            Conversación reiniciada. ¿En qué te puedo ayudar sobre el viaje a Egipto o el Programa Platinum?
-          </div>
-        </div>
-      `;
+          <div class="bg-white p-3 rounded-2xl rounded-tl-none border border-slate-200 text-slate-700 shadow-sm">Conversación reiniciada. ¿En qué te puedo ayudar sobre el viaje a Egipto o el Programa Platinum?</div>
+        </div>`;
     }
 
-    function escapeHtml(str) {
-      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    }
+    function escapeHtml(str) { return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+    function formatMarkdown(str) { return str.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\*(.*?)\*/g, '<i>$1</i>').replace(/\n/g, '<br>'); }
 
-    function formatMarkdown(str) {
-      return str
-        .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
-        .replace(/\*(.*?)\*/g, '<i>$1</i>')
-        .replace(/\n/g, '<br>');
-    }
-
-    // ==========================================
-    // CAMBIO DE PESTAÑAS (TABS)
-    // ==========================================
     function switchTab(tabName) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.getElementById('tab-' + tabName).classList.add('active');
 
-      const tabs = ['chat', 'itinerary', 'platinum', 'tools'];
+      const tabs = ['chat', 'itinerary', 'checklist', 'tools'];
       tabs.forEach(t => {
         const btn = document.getElementById('nav-' + t);
         if (t === tabName) {
@@ -373,40 +328,24 @@
       });
     }
 
-    // ==========================================
-    // CUENTA ATRÁS A EGIPTO (24 OCTUBRE 2026)
-    // ==========================================
     const targetDate = new Date("October 24, 2026 00:00:00").getTime();
-
     function updateCountdown() {
       const now = new Date().getTime();
       const difference = targetDate - now;
-
       if (difference > 0) {
-        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
-        document.getElementById("cd-days").innerText = days;
-        document.getElementById("cd-hours").innerText = hours;
-        document.getElementById("cd-mins").innerText = minutes;
-        document.getElementById("cd-secs").innerText = seconds;
+        document.getElementById("cd-days").innerText = Math.floor(difference / (1000 * 60 * 60 * 24));
+        document.getElementById("cd-hours").innerText = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        document.getElementById("cd-mins").innerText = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        document.getElementById("cd-secs").innerText = Math.floor((difference % (1000 * 60)) / 1000);
       }
     }
-
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // ==========================================
-    // CONVERSOR DE DIVISAS (EUR / EGP)
-    // ==========================================
     const exchangeRate = 52.0;
-
     function convertCurrency(type) {
       const eurInput = document.getElementById("input-eur");
       const egpInput = document.getElementById("input-egp");
-
       if (type === 'eur') {
         const val = parseFloat(eurInput.value);
         egpInput.value = isNaN(val) ? "" : (val * exchangeRate).toFixed(2);
