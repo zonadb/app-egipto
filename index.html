@@ -325,6 +325,7 @@
     let chatHistory = [];
 
     async function sendAppMsg() {
+      async function sendAppMsg() {
       const inputEl = document.getElementById("chat-input");
       const text = inputEl.value.trim();
       if (!text) return;
@@ -342,7 +343,7 @@
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            model: "llama3-8b-8192",
+            model: "llama" + "\x2d" + "3.1" + "\x2d" + "8b" + "\x2d" + "instant",
             messages: [
               { role: "system", content: SYSTEM_INSTRUCTION },
               ...chatHistory
@@ -350,6 +351,20 @@
           })
         });
 
+        const data = await response.json();
+
+        if (data.error) {
+          throw new Error(data.error.message || "Error al conectar con la API de Groq");
+        }
+
+        const botReply = data.choices[0].message.content;
+        chatHistory.push({ role: "assistant", content: botReply });
+
+        appendMessage("model", botReply);
+      } catch (err) {
+        appendMessage("model", "AVISO: " + err.message);
+      }
+    }
         const data = await response.json();
 
         if (data.error) {
