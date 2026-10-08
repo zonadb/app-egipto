@@ -15,8 +15,7 @@
               black: '#111111',
               dark: '#1a1a1a',
               orange: '#ff6600',
-              orangeHover: '#e65c00',
-              lightOrange: '#fff0e6'
+              orangeHover: '#e65c00'
             }
           }
         }
@@ -266,10 +265,9 @@
     </div>
   </nav>
 
-  <!-- SCRIPT CON CLAVE Y MODELO GRATUITO DE OPENROUTER -->
+  <!-- CONEXIÓN DIRECTA Y GRATUITA CON GROQ -->
   <script>
-    // TU CLAVE RECIÉN CREADA EN LA IMAGEN
-    const GEMINI_API_KEY = "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";
+    const GROQ_API_KEY = "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";
 
     const SYSTEM_INSTRUCTION = `
     Eres el Asistente Virtual Oficial del Grupo Zona de Baño, Soc. COOP. para el "Programa Platinum" y el Viaje Oficial a Egipto 2026.
@@ -305,26 +303,20 @@
       appendMessage("user", text);
       inputEl.value = "";
 
-      chatHistory.push({ role: "user", parts: [{ text: text }] });
+      chatHistory.push({ role: "user", content: text });
 
       try {
-        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${GEMINI_API_KEY}`,
-            "HTTP-Referer": "https://zonadb.github.io/app-egipto/",
-            "X-Title": "Zona de Bano Platinum App",
+            "Authorization": `Bearer ${GROQ_API_KEY}`,
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            // MODELO GRATUITO OFICIAL DE OPENROUTER ($0 COSTE):
-            model: "openrouter/free",
+            model: "llama-3.3-70b-versatile",
             messages: [
               { role: "system", content: SYSTEM_INSTRUCTION },
-              ...chatHistory.map(m => ({
-                role: m.role === "model" ? "assistant" : "user",
-                content: m.parts[0].text
-              }))
+              ...chatHistory
             ]
           })
         });
@@ -332,11 +324,11 @@
         const data = await response.json();
 
         if (data.error) {
-          throw new Error(data.error.message || "Error al conectar con la IA");
+          throw new Error(data.error.message || "Error al conectar con la API de Groq");
         }
 
         const botReply = data.choices[0].message.content;
-        chatHistory.push({ role: "model", parts: [{ text: botReply }] });
+        chatHistory.push({ role: "assistant", content: botReply });
 
         appendMessage("model", botReply);
       } catch (err) {
